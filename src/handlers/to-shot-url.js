@@ -2,7 +2,7 @@ const dynamodb = require('aws-sdk/clients/dynamodb');
 const docClient = new dynamodb.DocumentClient();
 const shotIdGen = require('shortid');
 // Get the DynamoDB table name from environment variables
-const tableName = process.env.DDB_TABLE;
+const tableName = process.env.Url_Table;
 
 /**
  * get original url and save to DynamoDB .

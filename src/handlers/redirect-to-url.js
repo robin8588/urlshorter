@@ -1,7 +1,7 @@
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const docClient = new dynamodb.DocumentClient();
 // Get the DynamoDB table name from environment variables
-const tableName = process.env.DDB_TABLE;
+const tableName = process.env.Url_Table;
 
 /**
  * get shotId from path get original url from DynamoDB.

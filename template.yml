@@ -18,7 +18,7 @@ Resources:
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
 
-  toShotUrlLambdaFunction:
+  ToShotUrlLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/to-shot-url.toShotUrlLambdaHandler
@@ -27,15 +27,21 @@ Resources:
       Timeout: 100
       Description: transferm url to shot url
       Policies:
-        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        # Give Create/Read/Update/Delete Permissions to the UrlTable
         - DynamoDBCrudPolicy:
-            TableName: !Ref SampleTable
+            TableName: !Ref UrlTable
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref SampleTable
+          Url_Table: !Ref UrlTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: POST
 
-  redirectToUrlLambdaHandler:
+  RedirectToUrlLambdaHandler:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/redirect-to-url.redirectToUrlLambdaHandler
@@ -44,10 +50,22 @@ Resources:
       Timeout: 100
       Description: redirect to url by shot url
       Policies:
-        - AWSLambdaBasicExecutionRole
+        # Give Create/Read/Update/Delete Permissions to the UrlTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UrlTable
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          Url_Table: !Ref UrlTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{id}
+            Method: GET
 
 # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
-  SimpleTable:
+  UrlTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
       PrimaryKey:
@@ -56,3 +74,8 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 10
         WriteCapacityUnits: 10
+
+Outputs:
+  WebEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
