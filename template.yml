@@ -18,15 +18,41 @@ Resources:
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
 
-  # This is a Lambda function config associated with the source code: hello-from-lambda.js
-  helloFromLambdaFunction:
+  toShotUrlLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/hello-from-lambda.helloFromLambdaHandler
+      Handler: src/handlers/to-shot-url.toShotUrlLambdaHandler
       Runtime: nodejs12.x
       MemorySize: 128
       Timeout: 100
-      Description: A Lambda function that returns a static string.
+      Description: transferm url to shot url
       Policies:
-        # Give Lambda basic execution Permission to the helloFromLambda
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SampleTable
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          SAMPLE_TABLE: !Ref SampleTable
+
+  redirectToUrlLambdaHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/redirect-to-url.redirectToUrlLambdaHandler
+      Runtime: nodejs12.x
+      MemorySize: 128
+      Timeout: 100
+      Description: redirect to url by shot url
+      Policies:
         - AWSLambdaBasicExecutionRole
+
+# DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
+  SimpleTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: shotId
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 10
+        WriteCapacityUnits: 10
