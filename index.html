@@ -678,14 +678,19 @@
       crossDomain: "true",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify(data),
-      success: function (data) {
-        // clear form and show a success message
-        alert("Successfull");
-        $('.boxtextcenter').append(data.shotId)
+      beforeSend: function(){
+        $('.boxtextcenter').empty();
+        $('.boxtextcenter').append('working...');
       },
-      error: function () {
-        // show an error message
-        alert("Some thing happen");
+      success: function (data) {
+        $('.boxtextcenter').empty();
+        $('.boxtextcenter').append('shoturl: '+ shoterUrl + data.shotId);
+      },
+      error: function (jqXHR ,textStatus,errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+        alert("oops , please try again")
       }
     });
   }

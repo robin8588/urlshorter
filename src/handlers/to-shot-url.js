@@ -32,6 +32,9 @@ exports.toShotUrlLambdaHandler = async (event) => {
 
         const response = {
             statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin" : "*"
+            },
             body: JSON.stringify({ shotId: shotId, originUrl: originUrl })
         };
         console.info('response:', response);
