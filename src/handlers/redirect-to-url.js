@@ -7,6 +7,8 @@ const tableName = process.env.Url_Table;
  * get shotId from path get original url from DynamoDB.
  */
 exports.redirectToUrlLambdaHandler = async (event) => {
+    console.info('received:', event);
+  
     if (event.httpMethod !== 'GET') {
         const response = {
             statusCode: 400
@@ -14,9 +16,7 @@ exports.redirectToUrlLambdaHandler = async (event) => {
         return response;
     }
 
-    console.info('received:', event);
-  
-    const shotId = getShotIdFromPath(event.path);
+    const shotId = getShotIdFromPath(event);
   
     var params = {
       TableName : tableName,
@@ -38,6 +38,6 @@ exports.redirectToUrlLambdaHandler = async (event) => {
     return response;
 }   
     
-function getShotIdFromPath(path) {
-    return path.charAt(1);
+function getShotIdFromPath(event) {
+    return event.pathParameters.id;
 }   

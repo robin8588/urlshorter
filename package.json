@@ -12,5 +12,17 @@
     },
     "scripts": {
         "test": "jest"
+    },
+    "jest": {
+        "verbose": true,
+        "collectCoverage": true,
+        "coveragePathIgnorePatterns":[
+            "<rootDir>/.aws-sam/", 
+            "<rootDir>/node_modules/"
+        ],
+        "testPathIgnorePatterns":[
+            "<rootDir>/.aws-sam/", 
+            "<rootDir>/node_modules/"
+        ]
     }
 }

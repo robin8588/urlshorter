@@ -628,6 +628,7 @@
       }
     }
   </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -643,7 +644,7 @@
         <div id="formurl">
           <input type="text" id='url' name="url" placeholder="Enter the link here">
           <div id="formbutton">
-            <input type="submit" value="Shorten URL" onclick='submitToAPI'>
+            <input type="button" value="Shorten URL" onclick='submitToAPI()'>
           </div>
         </div>
       </form>
@@ -655,11 +656,10 @@
   </footer>
 </body>
 <script>
-  function submitToAPI(e) {
-    e.preventDefault();
-    var shoterUrl = "https://abc1234.execute-api.us-east-1.amazonaws.com/01/contact";
+  function submitToAPI() {
+    var shoterUrl = "https://y18rk4db55.execute-api.ap-northeast-2.amazonaws.com/Prod/";
 
-    var urlTester = /[A-Za-z]{1}[A-Za-z]/;
+    var urlTester = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
     if (!urlTester.test($("#url").val())) {
       alert("url not right");
       return;

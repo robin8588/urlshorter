@@ -27,7 +27,7 @@ describe('Test redirectToUrlLambdaHandler', () => {
  
         const event = { 
             httpMethod: 'GET', 
-            path: '/' + shotId
+            pathParameters: { id: shotId }
         } 
  
         // Invoke redirectToUrlLambdaHandler() 

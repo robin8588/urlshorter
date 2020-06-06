@@ -8,35 +8,39 @@ const tableName = process.env.Url_Table;
  * get original url and save to DynamoDB .
  */
 exports.toShotUrlLambdaHandler = async (event) => {
-    if (event.httpMethod !== 'POST') {
-        const response = {
-            statusCode: 400
-        };
-        return response;
-    }
-    
     console.info('received:', event);
 
-    // Get url from the body of the request
-    const body = JSON.parse(event.body)
-    const originUrl = body.url;
-    const shotId = shotIdGen.generate();
+    if (event.httpMethod !== 'POST') {
+        return {
+            statusCode: 400
+        };
+    }
 
-    var params = {
-        TableName : tableName,
-        Item: { shotId : shotId, originUrl: originUrl }
-    };
+    try {
+        // Get url from the body of the request
+        const body = JSON.parse(event.body);
+        const originUrl = body.url;
+        const shotId = shotIdGen.generate();
 
-    // Save to DDB
-    const result = await docClient.put(params).promise();
+        var params = {
+            TableName: tableName,
+            Item: { shotId: shotId, originUrl: originUrl }
+        };
 
-    console.info('putresult:', result);
-    
-    const response = {
-        statusCode: 200,
-        body: JSON.stringify(result)
-    };
+        // Save to DDB
+        await docClient.put(params).promise();
 
-    console.info('response:',response);
-    return response;
- }
+        const response = {
+            statusCode: 200,
+            body: JSON.stringify({ shotId: shotId, originUrl: originUrl })
+        };
+        console.info('response:', response);
+
+        return response;
+    } catch (error) {
+        console.info('error:', error.stack);
+        return {
+            statusCode: 400
+        };
+    }
+}
