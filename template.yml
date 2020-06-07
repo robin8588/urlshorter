@@ -5,7 +5,7 @@
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  urlshoter
+  Url Shoter
 
 # Transform section specifies one or more macros that AWS CloudFormation uses to process your template
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
@@ -25,12 +25,29 @@ Globals:
     Cors: 
       AllowHeaders: "'*'"
       AllowOrigin: "'*'"
+    # StageName: Prod
+    # DefinitionBody:
+    #   Fn::Transform:
+    #     Name: AWS::Include
+    #     Parameters:
+    #       Location: s3://aws-sam-cli-managed-default-samclisourcebucket-hfecv3sejgsr/swagger.yaml
+
 
 # Resources declares the AWS resources that you want to include in the stack
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
 Resources:
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  # ShotUrlApiGateway: 
+  #   Type: AWS::Serverless::Api
+  #   Properties:
+  #     StageName: Prod
+  #     DefinitionBody:
+  #       Fn::Transform:
+  #         Name: AWS::Include
+  #         Parameters:
+  #           Location: s3://aws-sam-cli-managed-default-samclisourcebucket-hfecv3sejgsr/swagger.yaml
+  
   ToShotUrlLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -41,11 +58,12 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: !Ref UrlTable
       Events:
-        Api:
+        ToShotUrl:
           Type: Api
           Properties:
             Path: /
             Method: POST
+            #RestApiId: !Ref ShotUrlApiGateway
 
   RedirectToUrlLambdaFunction:
     Type: AWS::Serverless::Function
@@ -62,6 +80,7 @@ Resources:
           Properties:
             Path: /{id}
             Method: GET
+            #RestApiId: !Ref ShotUrlApiGateway
 
 # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
   UrlTable:

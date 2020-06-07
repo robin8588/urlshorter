@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1591420883962" clover="3.2.0">
-  <project timestamp="1591420883962" name="All files">
+<coverage generated="1591509674628" clover="3.2.0">
+  <project timestamp="1591509674628" name="All files">
     <metrics statements="35" coveredstatements="33" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="3" elements="42" coveredelements="40" complexity="0" loc="35" ncloc="35" packages="1" files="2" classes="2"/>
     <file name="redirect-to-url.js" path="/Users/Leo/Documents/projects/aws/urlshoter/src/handlers/redirect-to-url.js">
       <metrics statements="16" coveredstatements="16" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
@@ -38,10 +38,10 @@
       <line num="25" count="1" type="stmt"/>
       <line num="31" count="1" type="stmt"/>
       <line num="33" count="1" type="stmt"/>
-      <line num="37" count="1" type="stmt"/>
-      <line num="39" count="1" type="stmt"/>
-      <line num="41" count="0" type="stmt"/>
-      <line num="42" count="0" type="stmt"/>
+      <line num="40" count="1" type="stmt"/>
+      <line num="42" count="1" type="stmt"/>
+      <line num="44" count="0" type="stmt"/>
+      <line num="45" count="0" type="stmt"/>
     </file>
   </project>
 </coverage>
