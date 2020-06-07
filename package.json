@@ -18,11 +18,13 @@
         "collectCoverage": true,
         "coveragePathIgnorePatterns":[
             "<rootDir>/.aws-sam/", 
-            "<rootDir>/node_modules/"
+            "<rootDir>/node_modules/",
+            "<rootDir>/pipeline/"
         ],
         "testPathIgnorePatterns":[
             "<rootDir>/.aws-sam/", 
-            "<rootDir>/node_modules/"
+            "<rootDir>/node_modules/",
+            "<rootDir>/pipeline/"
         ]
     }
 }
