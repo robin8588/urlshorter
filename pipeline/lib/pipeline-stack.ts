@@ -64,5 +64,26 @@ export class PipelineStack extends cdk.Stack {
       ],
     });
 
+    // Deploy stage
+    pipeline.addStage({
+      stageName: 'Dev',
+      actions: [
+        new codepipeline_actions.CloudFormationCreateReplaceChangeSetAction({
+          actionName: 'CreateChangeSet',
+          templatePath: buildOutput.atPath("packaged.yaml"),
+          stackName: 'shot-url-pipeline-stack',
+          adminPermissions: true,
+          changeSetName: 'shot-url-dev-changeset',
+          runOrder: 1
+        }),
+        new codepipeline_actions.CloudFormationExecuteChangeSetAction({
+          actionName: 'Deploy',
+          stackName: 'shot-url-pipeline-stack',
+          changeSetName: 'shot-url-dev-changeset',
+          runOrder: 2
+        }),
+      ],
+    });
+
   }
 }
