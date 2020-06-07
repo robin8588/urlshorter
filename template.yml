@@ -25,28 +25,24 @@ Globals:
     Cors: 
       AllowHeaders: "'*'"
       AllowOrigin: "'*'"
-    # StageName: Prod
-    # DefinitionBody:
-    #   Fn::Transform:
-    #     Name: AWS::Include
-    #     Parameters:
-    #       Location: s3://aws-sam-cli-managed-default-samclisourcebucket-hfecv3sejgsr/swagger.yaml
-
 
 # Resources declares the AWS resources that you want to include in the stack
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
 Resources:
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-  # ShotUrlApiGateway: 
+  # ShotUrlApi: 
   #   Type: AWS::Serverless::Api
   #   Properties:
   #     StageName: Prod
-  #     DefinitionBody:
-  #       Fn::Transform:
-  #         Name: AWS::Include
-  #         Parameters:
-  #           Location: s3://aws-sam-cli-managed-default-samclisourcebucket-hfecv3sejgsr/swagger.yaml
+  #     Cors: 
+  #       AllowHeaders: "'*'"
+  #       AllowOrigin: "'*'"
+      # DefinitionBody:
+      #   Fn::Transform:
+      #     Name: AWS::Include
+      #     Parameters:
+      #       Location: s3://shoturlweb/swaggerui/swagger.yaml
   
   ToShotUrlLambdaFunction:
     Type: AWS::Serverless::Function
@@ -63,7 +59,7 @@ Resources:
           Properties:
             Path: /
             Method: POST
-            #RestApiId: !Ref ShotUrlApiGateway
+            #RestApiId: !Ref ShotUrlApi
 
   RedirectToUrlLambdaFunction:
     Type: AWS::Serverless::Function
@@ -80,7 +76,7 @@ Resources:
           Properties:
             Path: /{id}
             Method: GET
-            #RestApiId: !Ref ShotUrlApiGateway
+            #RestApiId: !Ref ShotUrlApi
 
 # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
   UrlTable:

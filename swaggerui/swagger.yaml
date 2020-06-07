@@ -1,0 +1,69 @@
+---
+swagger: "2.0"
+info:
+  version: "1.0"
+  title: "UrlShoter"
+host: "e6akmkb9ol.execute-api.ap-northeast-2.amazonaws.com"
+basePath: "/Prod"
+schemes:
+- "https"
+paths:
+  /:
+    post:
+      summary: "Save shotId and url to db"
+      description: "Send url to get the shotCode"
+      operationId: "toshoturl"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "The url should be provided"
+        required: true
+        schema:
+          $ref: "#/definitions/PostUrlRequest"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/PostUrlResponse"
+        400:
+          description: "Bad Request"
+  /{id}:
+    get:
+      summary: "Get original url by shotCode"
+      description: "Redirect to the original url"
+      operationId: "redirecturl"
+      consumes:
+      - "application/json"
+      produces:
+      - "text/html"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The shot code of original url"
+        required: true
+        type: "string"
+      responses:
+        301:
+          description: "Redirect"
+          headers:
+            Location:
+              type: "string"
+        404:
+          description: "Not Found"
+definitions:
+  PostUrlRequest:
+    type: "object"
+    properties:
+      url:
+        type: "string"
+  PostUrlResponse:
+    type: "object"
+    properties:
+      shotId:
+        type: "string"
+      originUrl:
+        type: "string"

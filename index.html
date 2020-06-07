@@ -657,7 +657,7 @@
 </body>
 <script>
   function submitToAPI() {
-    var shoterUrl = "https://bot92r4zn7.execute-api.ap-northeast-2.amazonaws.com/Prod/";
+    var shoterUrl = "https://e6akmkb9ol.execute-api.ap-northeast-2.amazonaws.com/Prod/";
 
     var urlTester = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
     if (!urlTester.test($("#url").val())) {
@@ -680,7 +680,7 @@
       data: JSON.stringify(data),
       beforeSend: function(){
         $('.boxtextcenter').empty();
-        $('.boxtextcenter').append('working...');
+        $('.boxtextcenter').append('loading...');
       },
       success: function (data) {
         $('.boxtextcenter').empty();
