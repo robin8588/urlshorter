@@ -16,10 +16,16 @@ phases:
   build:
     commands:
       # Use AWS SAM to package the application by using AWS CloudFormation
-      - aws cloudformation package --template template.yml --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-hfecv3sejgsr --output-template template-export.yml
+      - sam build
+  post_build:
+    commands:
+      # Use Post-Build for notifications, git tags, upload artifacts to S3
+      - sam package --s3-bucket $PACKAGE_BUCKET --output-template-file packaged.yaml
+
 artifacts:
-  type: zip
+  discard-paths: yes
   files:
-    - template-export.yml
+    # List of local artifacts that will be passed down the pipeline
+    - packaged.yaml
 
 
