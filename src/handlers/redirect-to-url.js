@@ -39,5 +39,5 @@ exports.redirectToUrlLambdaHandler = async (event) => {
 }   
     
 function getShotIdFromPath(event) {
-    return event.pathParameters.id;
+    return event.pathParameters.shotId;
 }   

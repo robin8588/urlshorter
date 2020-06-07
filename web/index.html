@@ -642,7 +642,7 @@
       <h1>Paste the URL to be shortened</h1>
       <form action="/" method="post">
         <div id="formurl">
-          <input type="text" id='url' name="url" placeholder="Enter the link here">
+          <input type="text" id='url' name="url" placeholder="https://">
           <div id="formbutton">
             <input type="button" value="Shorten URL" onclick='submitToAPI()'>
           </div>
@@ -657,11 +657,11 @@
 </body>
 <script>
   function submitToAPI() {
-    var shoterUrl = "https://e6akmkb9ol.execute-api.ap-northeast-2.amazonaws.com/Prod/";
+    var shoterUrl = "https://n3ej95r0h3.execute-api.ap-northeast-2.amazonaws.com/Prod/";
 
     var urlTester = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
     if (!urlTester.test($("#url").val())) {
-      alert("url not right");
+      $('.boxtextcenter').append('url not right');
       return;
     }
 
@@ -684,13 +684,14 @@
       },
       success: function (data) {
         $('.boxtextcenter').empty();
-        $('.boxtextcenter').append('shoturl: '+ shoterUrl + data.shotId);
+        $('.boxtextcenter').append('Shoturl: <b>'+ shoterUrl + data.shotId + '</b>');
       },
       error: function (jqXHR ,textStatus,errorThrown) {
         console.log(jqXHR);
         console.log(textStatus);
         console.log(errorThrown);
-        alert("oops , please try again")
+        $('.boxtextcenter').empty();
+        $('.boxtextcenter').append('oops , please try again');
       }
     });
   }

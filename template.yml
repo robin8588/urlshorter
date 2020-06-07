@@ -74,7 +74,7 @@ Resources:
         RedirectToUrlApi:
           Type: Api
           Properties:
-            Path: /{id}
+            Path: /{shotId}
             Method: GET
             #RestApiId: !Ref ShotUrlApi
 

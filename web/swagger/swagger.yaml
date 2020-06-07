@@ -3,7 +3,7 @@ swagger: "2.0"
 info:
   version: "1.0"
   title: "UrlShoter"
-host: "e6akmkb9ol.execute-api.ap-northeast-2.amazonaws.com"
+host: "https://n3ej95r0h3.execute-api.ap-northeast-2.amazonaws.com/Prod/"
 basePath: "/Prod"
 schemes:
 - "https"
@@ -41,7 +41,7 @@ paths:
       produces:
       - "text/html"
       parameters:
-      - name: "id"
+      - name: "shodId"
         in: "path"
         description: "The shot code of original url"
         required: true

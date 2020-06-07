@@ -4,6 +4,7 @@ import codecommit = require('@aws-cdk/aws-codecommit');
 import codepipeline = require('@aws-cdk/aws-codepipeline');
 import codepipeline_actions = require('@aws-cdk/aws-codepipeline-actions');
 import codebuild = require('@aws-cdk/aws-codebuild');
+import * as iam from '@aws-cdk/aws-iam';
 
 export class PipelineStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -20,7 +21,8 @@ export class PipelineStack extends cdk.Stack {
 
     // Pipeline creation starts
     const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
-      artifactBucket: artifactsBucket
+      artifactBucket: artifactsBucket,
+      role: iam.Role.fromRoleArn(this,'AWSCodePipelineServiceRole','arn:aws:iam::357518989200:role/service-role/AWSCodePipelineServiceRole')
     });
 
     // Declare source code as an artifact
@@ -33,9 +35,9 @@ export class PipelineStack extends cdk.Stack {
         new codepipeline_actions.CodeCommitSourceAction({
           actionName: 'CodeCommit_Source',
           repository: codeRepo,
-          output: sourceOutput,
+          output: sourceOutput
         }),
-      ],
+      ]
     });
 
     // Declare build output as artifacts
@@ -80,7 +82,8 @@ export class PipelineStack extends cdk.Stack {
           actionName: 'Deploy',
           stackName: 'shot-url-pipeline-stack',
           changeSetName: 'shot-url-dev-changeset',
-          runOrder: 2
+          runOrder: 2,
+          role: iam.Role.fromRoleArn(this,'PipelineDeployRole','arn:aws:iam::357518989200:role/PipelineDeployRole')
         }),
       ],
     });
