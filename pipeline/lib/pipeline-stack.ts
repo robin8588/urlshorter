@@ -5,13 +5,15 @@ import codepipeline = require('@aws-cdk/aws-codepipeline');
 import codepipeline_actions = require('@aws-cdk/aws-codepipeline-actions');
 import codebuild = require('@aws-cdk/aws-codebuild');
 import * as iam from '@aws-cdk/aws-iam';
+import { CodeCommitTrigger } from '@aws-cdk/aws-codepipeline-actions';
+import { CloudFormationCapabilities } from '@aws-cdk/aws-cloudformation';
 
 export class PipelineStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // The code that defines your stack goes here
-    const artifactsBucket = new s3.Bucket(this, "shoturl-artifact-bucket");
+    const artifactsBucket = new s3.Bucket(this, "shoturl-pipeline-artifact");
     // Import existing CodeCommit sam-app repository
     const codeRepo = codecommit.Repository.fromRepositoryName(
       this,
@@ -33,10 +35,12 @@ export class PipelineStack extends cdk.Stack {
       stageName: 'Source',
       actions: [
         new codepipeline_actions.CodeCommitSourceAction({
-          actionName: 'CodeCommit_Source',
+          actionName: 'Source',
           repository: codeRepo,
-          output: sourceOutput
-        }),
+          output: sourceOutput,
+          branch: 'master',
+          trigger: CodeCommitTrigger.EVENTS
+        })
       ]
     });
 
@@ -50,7 +54,8 @@ export class PipelineStack extends cdk.Stack {
         'PACKAGE_BUCKET': {
           value: artifactsBucket.bucketName
         }
-      }
+      },
+      role: iam.Role.fromRoleArn(this,'CodeBuildServiceRole','arn:aws:iam::357518989200:role/service-role/CodeBuildServiceRole')
     });
 
     // Add the build stage to our pipeline
@@ -68,22 +73,23 @@ export class PipelineStack extends cdk.Stack {
 
     // Deploy stage
     pipeline.addStage({
-      stageName: 'Dev',
+      stageName: 'Deploy',
       actions: [
         new codepipeline_actions.CloudFormationCreateReplaceChangeSetAction({
-          actionName: 'CreateChangeSet',
+          actionName: 'CreateReplaceChangeSet',
           templatePath: buildOutput.atPath("packaged.yaml"),
           stackName: 'shot-url-pipeline-stack',
-          adminPermissions: true,
-          changeSetName: 'shot-url-dev-changeset',
+          adminPermissions: false,
+          deploymentRole: iam.Role.fromRoleArn(this, 'PipelineDeployRole', 'arn:aws:iam::357518989200:role/PipelineDeployRole'),
+          capabilities: [CloudFormationCapabilities.ANONYMOUS_IAM,CloudFormationCapabilities.AUTO_EXPAND],
+          changeSetName: 'shot-url-deploy-changeset',
           runOrder: 1
         }),
         new codepipeline_actions.CloudFormationExecuteChangeSetAction({
-          actionName: 'Deploy',
+          actionName: 'ExecuteChangeSet',
           stackName: 'shot-url-pipeline-stack',
-          changeSetName: 'shot-url-dev-changeset',
-          runOrder: 2,
-          role: iam.Role.fromRoleArn(this,'PipelineDeployRole','arn:aws:iam::357518989200:role/PipelineDeployRole')
+          changeSetName: 'shot-url-deploy-changeset',
+          runOrder: 2
         }),
       ],
     });
