@@ -1,5 +1,7 @@
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const docClient = new dynamodb.DocumentClient();
+const redirect = require('../libs/redirect.js');
+const bad = require('../libs/bad.js')
 // Get the DynamoDB table name from environment variables
 const tableName = process.env.Url_Table;
 
@@ -10,32 +12,26 @@ exports.redirectToUrlLambdaHandler = async (event) => {
     console.info('received:', event);
   
     if (event.httpMethod !== 'GET') {
-        const response = {
-            statusCode: 400
-        };
-        return response;
+        return bad();
     }
 
-    const shotId = getShotIdFromPath(event);
+    try {
+        //get shotId from query path
+        const shotId = getShotIdFromPath(event);
   
-    var params = {
-      TableName : tableName,
-      Key: { shotId: shotId },
-    };
+        const result = await docClient.get({
+            TableName: tableName,
+            Key: { shotId: shotId },
+        }).promise();
 
-    const result = await docClient.get(params).promise();
+        console.info('getresult:', result);
 
-    console.info('getresult:', result);
-
-    const response = {
-        statusCode: 301,
-        headers: {
-            Location: result.Item.originUrl
-        }
-    };
-   
-    console.info('response:',response);
-    return response;
+        return redirect(result.Item.originUrl);
+    }
+    catch (error) {
+        console.error('error:', error.stack);
+        return bad();
+    }
 }   
     
 function getShotIdFromPath(event) {

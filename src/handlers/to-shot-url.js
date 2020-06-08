@@ -1,8 +1,11 @@
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const docClient = new dynamodb.DocumentClient();
 const shotIdGen = require('shortid');
+const success = require('../libs/success.js');
+const bad = require('../libs/bad.js')
 // Get the DynamoDB table name from environment variables
 const tableName = process.env.Url_Table;
+
 
 /**
  * get original url and save to DynamoDB .
@@ -11,9 +14,7 @@ exports.toShotUrlLambdaHandler = async (event) => {
     console.info('received:', event);
 
     if (event.httpMethod !== 'POST') {
-        return {
-            statusCode: 400
-        };
+        return bad();
     }
 
     try {
@@ -22,28 +23,25 @@ exports.toShotUrlLambdaHandler = async (event) => {
         const originUrl = body.url;
         const shotId = shotIdGen.generate();
 
-        var params = {
+        if (!isValid(originUrl)) {
+            return bad();
+        }
+    
+        // Save to DDB
+        await docClient.put({
             TableName: tableName,
             Item: { shotId: shotId, originUrl: originUrl }
-        };
+        }).promise();
 
-        // Save to DDB
-        await docClient.put(params).promise();
-
-        const response = {
-            statusCode: 200,
-            headers: {
-                "Access-Control-Allow-Origin" : "*"
-            },
-            body: JSON.stringify({ shotId: shotId, originUrl: originUrl })
-        };
-        console.info('response:', response);
-
-        return response;
-    } catch (error) {
-        console.info('error:', error.stack);
-        return {
-            statusCode: 400
-        };
+        return success(JSON.stringify({ shotId: shotId, originUrl: originUrl }));;
     }
+    catch (error) {
+        console.error('error:', error.stack);
+        return bad();
+    }
+}
+
+function isValid(url) {
+    let urlTester = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+    return urlTester.test(url);
 }

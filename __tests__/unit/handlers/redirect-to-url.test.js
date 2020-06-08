@@ -57,6 +57,6 @@ describe('Test redirectToUrlLambdaHandler', () => {
         };
  
         expect(result).toEqual(expectedResult); 
-    }); 
+    });
 }); 
  

@@ -17,8 +17,6 @@ describe('Test toShotUrlLambdaHandler', function () {
     // Test invokes toShotUrlLambdaHandler() and compare the result when success 
     it('test get shot url success', async () => { 
         const originUrl = 'https://www.test.com';
-        const shotId = shotIdGen.generate();
-        const returnedItem = { shotId: shotId, originUrl: originUrl }; 
  
         //mock DDB put success returned value
         putSpy.mockReturnValue({ 
@@ -31,15 +29,13 @@ describe('Test toShotUrlLambdaHandler', function () {
         }; 
      
         // Invoke toShotUrlLambdaHandler() 
-        const result = await lambda.toShotUrlLambdaHandler(event); 
+        const response = await lambda.toShotUrlLambdaHandler(event); 
         
-        const expectedResult = { 
-            statusCode: 200, 
-            //body: JSON.stringify(returnedItem) 
-        }; 
- 
         // Compare the result with the expected result 
-        expect(result.statusCode).toEqual(expectedResult.statusCode); 
+        expect(response.statusCode).toEqual(200); 
+        const responseBody = JSON.parse(response.body);
+        expect(responseBody.originUrl).toEqual(originUrl); 
+        expect(responseBody.shotId).not.toBeNull();
     }); 
 
     it('test get shot url wrong method', async () => { 
@@ -55,6 +51,26 @@ describe('Test toShotUrlLambdaHandler', function () {
         };
  
         expect(result.expectedResult).toEqual(expectedResult.expectedResult); 
+    }); 
+
+    it('test send wrong url', async () => { 
+        const originUrl = 'www.test.com';
+ 
+        //mock DDB put success returned value
+        putSpy.mockReturnValue({ 
+            promise: () => Promise.resolve() 
+        }); 
+ 
+        const event = { 
+            httpMethod: 'POST', 
+            body: JSON.stringify({url:originUrl})
+        }; 
+     
+        // Invoke toShotUrlLambdaHandler() 
+        const result = await lambda.toShotUrlLambdaHandler(event); 
+ 
+        // Compare the result with the expected result 
+        expect(result.statusCode).toEqual(400); 
     }); 
 }); 
  
