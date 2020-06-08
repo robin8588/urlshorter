@@ -642,7 +642,7 @@
       <h1>Paste the URL to be shortened</h1>
       <form action="/" method="post">
         <div id="formurl">
-          <input type="text" id='url' name="url" placeholder="https://">
+          <input type="text" id='url' name="url" placeholder="https://" onfocus="cleanInput()">
           <div id="formbutton">
             <input type="button" value="Shorten URL" onclick='submitToAPI()'>
           </div>
@@ -656,12 +656,16 @@
   </footer>
 </body>
 <script>
+  function cleanInput(){
+    $('#url').val('');
+  }
+
   function submitToAPI() {
     var shoterUrl = "https://5l1sslpe0f.execute-api.ap-northeast-2.amazonaws.com/Prod/";
 
-    var urlTester = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+    var urlTester = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
     if (!urlTester.test($("#url").val())) {
-      $('.boxtextcenter').append('url not right');
+      message('please put the right url');
       return;
     }
 
@@ -679,21 +683,20 @@
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify(data),
       beforeSend: function(){
-        $('.boxtextcenter').empty();
-        $('.boxtextcenter').append('loading...');
+        message('loading');
       },
       success: function (data) {
-        $('.boxtextcenter').empty();
-        $('.boxtextcenter').append('Shoturl: <b>'+ shoterUrl + data.shotId + '</b>');
+        message('<b>Shoturl: </b><span>'+ shoterUrl + data.shotId + '</span>')
       },
-      error: function (jqXHR ,textStatus,errorThrown) {
-        console.log(jqXHR);
-        console.log(textStatus);
-        console.log(errorThrown);
-        $('.boxtextcenter').empty();
-        $('.boxtextcenter').append('oops , please try again');
+      error: function () {
+        message('oops , please try again');
       }
     });
+  }
+
+  function message(msg){
+    $('.boxtextcenter').empty();
+    $('.boxtextcenter').append(msg);
   }
 </script>
 
