@@ -21,6 +21,11 @@ Globals:
     Environment:
       Variables:
         Url_Table: !Ref UrlTable
+    AutoPublishAlias: live
+    DeploymentPreference:
+      Type: AllAtOnce
+      Alarms:
+        - !Ref DeployErrorsAlarm
   Api:
     Cors: 
       AllowHeaders: "'*'"
@@ -43,7 +48,18 @@ Resources:
       #     Name: AWS::Include
       #     Parameters:
       #       Location: s3://shoturlweb/swaggerui/swagger.yaml
-  
+  IndexLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/index.indexLambdaHandler
+      Description: index
+      Events:
+        ToShotUrl:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+
   ToShotUrlLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -88,6 +104,25 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 10
         WriteCapacityUnits: 10
+
+  DeployErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Lambda function deploy errors
+      ComparisonOperator: GreaterThanThreshold
+      EvaluationPeriods: 2
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Period: 60
+      Statistic: Sum
+      Threshold: 0
+      Dimensions:
+        - Name: Resource
+          Value: !Sub "${IndexLambdaFunction}:live"
+        - Name: FunctionName
+          Value: !Ref IndexLambdaFunction
+        - Name: ExecutedVersion
+          Value: !GetAtt IndexLambdaFunction.Version.Version
 
 Outputs:
   WebEndpoint:

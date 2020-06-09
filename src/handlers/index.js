@@ -1,0 +1,1 @@
+exports.indexLambdaHandler = async (event) => { return {statusCode: 400 } }
