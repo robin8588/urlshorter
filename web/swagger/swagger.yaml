@@ -3,7 +3,7 @@ swagger: "2.0"
 info:
   version: "1.0"
   title: "UrlShoter"
-host: "https://5l1sslpe0f.execute-api.ap-northeast-2.amazonaws.com/Prod/"
+host: "https://59sy703n1f.execute-api.ap-northeast-2.amazonaws.com/Prod/"
 basePath: "/Prod"
 schemes:
 - "https"
