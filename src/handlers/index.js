@@ -1,1 +1,1 @@
-exports.indexLambdaHandler = async (event) => { return {statusCode: 400 } }
+exports.indexLambdaHandler = async () => { return {statusCode: 200 } }
