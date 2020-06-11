@@ -2,7 +2,7 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "urlshoter"
+stack_name = "urlshoter-test"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-hfecv3sejgsr"
 s3_prefix = "urlshoter"
 region = "ap-northeast-2"

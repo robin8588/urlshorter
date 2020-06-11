@@ -1,39 +1,41 @@
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const docClient = new dynamodb.DocumentClient();
-const redirect = require('../libs/redirect.js');
-const bad = require('../libs/bad.js')
-// Get the DynamoDB table name from environment variables
-const tableName = process.env.Url_Table;
+const redirect = require('../libs/redirect');
+const bad = require('../libs/bad');
+const reject = require('../libs/reject');
 
 /**
  * get shotId from path get original url from DynamoDB.
  */
 exports.redirectToUrlLambdaHandler = async (event) => {
-    console.info('received:', event);
-  
     if (event.httpMethod !== 'GET') {
-        return bad();
+        return reject();
     }
 
     try {
         //get shotId from query path
         const shotId = getShotIdFromPath(event);
   
-        const result = await docClient.get({
-            TableName: tableName,
-            Key: { shotId: shotId },
-        }).promise();
-
-        console.info('getresult:', result);
-
+        const result = await getUrlBy(shotId);
+        
         return redirect(result.Item.originUrl);
     }
     catch (error) {
-        console.error('error:', error.stack);
-        return bad();
+        return bad(error);
     }
 }   
     
-function getShotIdFromPath(event) {
+var getShotIdFromPath = function (event) {
     return event.pathParameters.shotId;
-}   
+}  
+
+var getUrlBy = async function (shotId) {
+    const result = await docClient.get({
+        TableName: process.env.Url_Table,
+        Key: { shotId: shotId },
+    }).promise();
+    if (!result.Item) {
+        throw new Error('redirect url not found');
+    }
+    return result;
+}

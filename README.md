@@ -102,8 +102,8 @@ To simplify troubleshooting, the AWS SAM CLI has a command called `sam logs`. `s
 **NOTE:** This command works for all Lambda functions, not just the ones you deploy using AWS SAM.
 
 ```bash
-sam logs -n ToShotUrlLambdaFunction --stack-name urlshoter --tail
-sam logs -n RedirectToUrlLambdaFunction --stack-name urlshoter --tail
+sam logs -n ToShotUrlLambdaFunction --stack-name urlshoter-test --tail
+sam logs -n RedirectToUrlLambdaFunction --stack-name urlshoter-test --tail
 ```
 
 **NOTE:** This uses the logical name of the function within the stack. This is the correct name to use when searching logs inside an AWS Lambda function within a CloudFormation stack, even if the deployed function name varies due to CloudFormation's unique resource name generation.

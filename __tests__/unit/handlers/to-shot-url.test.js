@@ -20,7 +20,7 @@ describe('Test toShotUrlLambdaHandler', function () {
  
         //mock DDB put success returned value
         putSpy.mockReturnValue({ 
-            promise: () => Promise.resolve() 
+            promise: () => Promise.resolve({}) 
         }); 
  
         const event = { 
@@ -46,14 +46,10 @@ describe('Test toShotUrlLambdaHandler', function () {
  
         const result = await lambda.toShotUrlLambdaHandler(event); 
  
-        const expectedResult = {
-            statusCode: 400
-        };
- 
-        expect(result.expectedResult).toEqual(expectedResult.expectedResult); 
+        expect(result.statusCode).toEqual(405); 
     }); 
 
-    it('test send wrong url', async () => { 
+    it('test send invalid url', async () => { 
         const originUrl = 'www.test.com';
  
         //mock DDB put success returned value
@@ -70,7 +66,27 @@ describe('Test toShotUrlLambdaHandler', function () {
         const result = await lambda.toShotUrlLambdaHandler(event); 
  
         // Compare the result with the expected result 
-        expect(result.statusCode).toEqual(400); 
+        expect(result.body).toEqual('invalid url'); 
+    }); 
+
+    it('test send null url', async () => { 
+        const originUrl = '';
+ 
+        //mock DDB put success returned value
+        putSpy.mockReturnValue({ 
+            promise: () => Promise.resolve() 
+        }); 
+ 
+        const event = { 
+            httpMethod: 'POST', 
+            body: JSON.stringify({url:originUrl})
+        }; 
+     
+        // Invoke toShotUrlLambdaHandler() 
+        const result = await lambda.toShotUrlLambdaHandler(event); 
+ 
+        // Compare the result with the expected result 
+        expect(result.body).toEqual('parameter not found'); 
     }); 
 }); 
  

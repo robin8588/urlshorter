@@ -52,11 +52,23 @@ describe('Test redirectToUrlLambdaHandler', () => {
  
         const result = await lambda.redirectToUrlLambdaHandler(event); 
  
-        const expectedResult = {
-            statusCode: 400
-        };
+        expect(result.statusCode).toEqual(405); 
+    });
+
+    it('test redirect url not found', async () => { 
+        
+        const event = { 
+            httpMethod: 'GET',
+            pathParameters: { shotId: 'shotid' }
+        } 
  
-        expect(result).toEqual(expectedResult); 
+        getSpy.mockReturnValue({ 
+            promise: () => Promise.resolve({}) 
+        }); 
+
+        const result = await lambda.redirectToUrlLambdaHandler(event); 
+ 
+        expect(result.body).toEqual('redirect url not found'); 
     });
 }); 
  

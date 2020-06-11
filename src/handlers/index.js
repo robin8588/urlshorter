@@ -1,1 +1,4 @@
-exports.indexLambdaHandler = async () => { return {statusCode: 200 } }
+exports.indexLambdaHandler = async () => {
+    console.info(process.env);
+    return { statusCode: 200 }
+}

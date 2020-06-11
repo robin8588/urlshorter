@@ -4,9 +4,11 @@ function success(body) {
     return  {
         statusCode: 200,
         headers: {
-            "Access-Control-Allow-Origin": "*"
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
         },
-        body: body
+        isBase64Encoded: false,
+        body: JSON.stringify(body)
     }
 }
 
