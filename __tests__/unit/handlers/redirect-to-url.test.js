@@ -33,15 +33,8 @@ describe('Test redirectToUrlLambdaHandler', () => {
         // Invoke redirectToUrlLambdaHandler() 
         const result = await lambda.redirectToUrlLambdaHandler(event); 
  
-        const expectedResult = {
-            statusCode: 301,
-            headers: {
-                Location: originUrl
-            }
-        };
- 
         // Compare the result with the expected result 
-        expect(result).toEqual(expectedResult); 
+        expect(result.statusCode).toEqual(301); 
     }); 
 
     it('test redirect to url wrong method', async () => { 

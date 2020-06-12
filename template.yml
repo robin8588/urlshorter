@@ -88,9 +88,6 @@ Resources:
       PrimaryKey:
         Name: shotId
         Type: String
-      ProvisionedThroughput:
-        ReadCapacityUnits: 10
-        WriteCapacityUnits: 10
 
   DeployErrorsAlarm:
     Type: AWS::CloudWatch::Alarm

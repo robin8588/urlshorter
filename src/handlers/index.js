@@ -2,7 +2,6 @@
  * welcome page
  */
 exports.indexLambdaHandler = async () => {
-    console.info(process.env);
     let html = '<html>' +
         '<head><title>Url Shoter API</title></head>' +
         '<body><h1>Welcome to Url Shoter API</h1>' +
