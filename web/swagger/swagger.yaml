@@ -3,7 +3,7 @@ swagger: "2.0"
 info:
   version: "1.0"
   title: "UrlShoter"
-host: "https://59sy703n1f.execute-api.ap-northeast-2.amazonaws.com/Prod/"
+host: "59sy703n1f.execute-api.ap-northeast-2.amazonaws.com"
 basePath: "/Prod"
 schemes:
 - "https"
@@ -31,7 +31,7 @@ paths:
             $ref: "#/definitions/PostUrlResponse"
         400:
           description: "Bad Request"
-  /{id}:
+  /{shodId}:
     get:
       summary: "Get original url by shotCode"
       description: "Redirect to the original url"
@@ -52,8 +52,8 @@ paths:
           headers:
             Location:
               type: "string"
-        404:
-          description: "Not Found"
+        400:
+          description: "Bad Request"
 definitions:
   PostUrlRequest:
     type: "object"

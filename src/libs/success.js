@@ -1,5 +1,7 @@
-'use strict';
-
+/**
+ * return 200 and return json format body
+ * @param {*} body 
+ */
 function success(body) {
     return  {
         statusCode: 200,

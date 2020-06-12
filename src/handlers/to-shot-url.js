@@ -15,14 +15,12 @@ exports.toShotUrlLambdaHandler = async (event) => {
     }
     
     try {
-        // Get url from the body of the request
         const originUrl = getUrl(event);
         
         validUrl(originUrl);
 
         const shotId = await genValidShotId();
         
-        // Save to DDB
         await saveUrl(shotId, originUrl);
 
         return success({ shotId: shotId, originUrl: originUrl });
@@ -32,6 +30,10 @@ exports.toShotUrlLambdaHandler = async (event) => {
     }
 }
 
+/**
+ * valid the input url
+ * @param {*} url 
+ */
 var validUrl = function(url) {
     let urlTester = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
     if (!urlTester.test(url)) {
@@ -39,6 +41,9 @@ var validUrl = function(url) {
     }
 }
 
+/**
+ * generate unique shot id
+ */
 var genValidShotId = async function () {
     const shotId = shotIdGen.generate();
     const result = docClient.get({
@@ -53,6 +58,10 @@ var genValidShotId = async function () {
     }
 }
 
+/**
+ * get url from the body of the request
+ * @param {*} event 
+ */
 var getUrl = function (event) {
     let body = JSON.parse(event.body);
     if (!body || !body.url) {
@@ -61,6 +70,11 @@ var getUrl = function (event) {
     return body.url;
 }
 
+/**
+ * save shotId and originUrl to DDB
+ * @param {*} shotId 
+ * @param {*} originUrl 
+ */
 var saveUrl = function (shotId, originUrl) {
     return docClient.put({
         TableName: process.env.Url_Table,

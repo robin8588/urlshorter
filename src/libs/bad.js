@@ -1,5 +1,7 @@
-'use strict';
-
+/**
+ * return 400 and global error handler
+ * @param {*} error 
+ */
 function bad(error) {
   console.error(error);
   return {

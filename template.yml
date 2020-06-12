@@ -36,18 +36,7 @@ Globals:
 Resources:
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-  # ShotUrlApi: 
-  #   Type: AWS::Serverless::Api
-  #   Properties:
-  #     StageName: Prod
-  #     Cors: 
-  #       AllowHeaders: "'*'"
-  #       AllowOrigin: "'*'"
-      # DefinitionBody:
-      #   Fn::Transform:
-      #     Name: AWS::Include
-      #     Parameters:
-      #       Location: s3://shoturlweb/swaggerui/swagger.yaml
+  
   IndexLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -75,7 +64,6 @@ Resources:
           Properties:
             Path: /
             Method: POST
-            #RestApiId: !Ref ShotUrlApi
 
   RedirectToUrlLambdaFunction:
     Type: AWS::Serverless::Function
@@ -92,9 +80,8 @@ Resources:
           Properties:
             Path: /{shotId}
             Method: GET
-            #RestApiId: !Ref ShotUrlApi
 
-# DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
+# DynamoDB table to store item
   UrlTable:
     Type: AWS::Serverless::SimpleTable
     Properties:

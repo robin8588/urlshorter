@@ -5,7 +5,7 @@ const bad = require('../libs/bad');
 const reject = require('../libs/reject');
 
 /**
- * get shotId from path get original url from DynamoDB.
+ * get shotId from path get original url from DynamoDB and redirect to original url
  */
 exports.redirectToUrlLambdaHandler = async (event) => {
     if (event.httpMethod !== 'GET') {
@@ -13,7 +13,6 @@ exports.redirectToUrlLambdaHandler = async (event) => {
     }
 
     try {
-        //get shotId from query path
         const shotId = getShotIdFromPath(event);
   
         const result = await getUrlBy(shotId);
@@ -24,11 +23,19 @@ exports.redirectToUrlLambdaHandler = async (event) => {
         return bad(error);
     }
 }   
-    
+
+/**
+ * get shotId from pathParameters.
+ * @param {*} event 
+ */
 var getShotIdFromPath = function (event) {
     return event.pathParameters.shotId;
 }  
 
+/**
+ * get original url from DynamoDB.
+ * @param {*} shotId 
+ */
 var getUrlBy = async function (shotId) {
     const result = await docClient.get({
         TableName: process.env.Url_Table,
