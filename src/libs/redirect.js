@@ -7,6 +7,7 @@ function redirect(url) {
         statusCode: 301,
         headers: {
             "Content-Type": "text/html; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
             Location: url
         },
         body:'<html><head><title>301 Moved Permanently</title></head><body bgcolor="white"><center><h1>301 Moved Permanently</h1></center><hr><center>ShotUrl</center></body></html>'
