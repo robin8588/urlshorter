@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   version: "1.0"
-  title: "UrlShoter"
+  title: "UrlShorter"
 host: "59sy703n1f.execute-api.ap-northeast-2.amazonaws.com"
 basePath: "/Prod"
 schemes:
@@ -10,9 +10,9 @@ schemes:
 paths:
   /:
     post:
-      summary: "Save shotId and url to db"
-      description: "Send url to get the shotCode"
-      operationId: "toshoturl"
+      summary: "Save shortId and url to db"
+      description: "Send url to get the shortCode"
+      operationId: "toshorturl"
       consumes:
       - "application/json"
       produces:
@@ -31,9 +31,9 @@ paths:
             $ref: "#/definitions/PostUrlResponse"
         400:
           description: "Bad Request"
-  /{shodId}:
+  /{shortId}:
     get:
-      summary: "Get original url by shotCode"
+      summary: "Get original url by shortCode"
       description: "Redirect to the original url"
       operationId: "redirecturl"
       consumes:
@@ -41,9 +41,9 @@ paths:
       produces:
       - "text/html"
       parameters:
-      - name: "shodId"
+      - name: "shortId"
         in: "path"
-        description: "The shot code of original url"
+        description: "The short code of original url"
         required: true
         type: "string"
       responses:
@@ -63,7 +63,7 @@ definitions:
   PostUrlResponse:
     type: "object"
     properties:
-      shotId:
+      shortId:
         type: "string"
       originUrl:
         type: "string"

@@ -1,6 +1,6 @@
 const lambda = require('../../../src/handlers/redirect-to-url.js'); 
 const dynamodb = require('aws-sdk/clients/dynamodb'); 
-const shotIdGen = require('short-id');
+const shortIdGen = require('short-id');
 
 // All tests for redirectToUrlLambdaHandler() 
 describe('Test redirectToUrlLambdaHandler', () => { 
@@ -17,8 +17,8 @@ describe('Test redirectToUrlLambdaHandler', () => {
     // Test redirectToUrlLambdaHandler() and compare the result when success
     it('test redirect to url success', async () => { 
         const originUrl = 'https://www.google.com';
-        const shotId = shotIdGen.generate();
-        const returnedItem = { shotId: shotId, originUrl: originUrl }; 
+        const shortId = shortIdGen.generate();
+        const returnedItem = { shortId: shortId, originUrl: originUrl }; 
  
         // Mock get item from DDB 
         getSpy.mockReturnValue({ 
@@ -27,7 +27,7 @@ describe('Test redirectToUrlLambdaHandler', () => {
  
         const event = { 
             httpMethod: 'GET', 
-            pathParameters: { shotId: shotId }
+            pathParameters: { shortId: shortId }
         } 
  
         // Invoke redirectToUrlLambdaHandler() 
@@ -52,7 +52,7 @@ describe('Test redirectToUrlLambdaHandler', () => {
         
         const event = { 
             httpMethod: 'GET',
-            pathParameters: { shotId: 'shotid' }
+            pathParameters: { shortId: 'shortid' }
         } 
  
         getSpy.mockReturnValue({ 

@@ -1,4 +1,4 @@
-# Url Shoter
+# Url Shorter
 
 This project contains source code and supporting files for a serverless application that you can deploy with the AWS Serverless Application Model (AWS SAM) command line interface (CLI). It includes the following files and folders:
 
@@ -107,8 +107,8 @@ To simplify troubleshooting, the AWS SAM CLI has a command called `sam logs`. `s
 **NOTE:** This command works for all Lambda functions, not just the ones you deploy using AWS SAM.
 
 ```bash
-sam logs -n ToShotUrlLambdaFunction --stack-name urlshoter-test --tail
-sam logs -n RedirectToUrlLambdaFunction --stack-name urlshoter-test --tail
+sam logs -n ToShortUrlLambdaFunction --stack-name urlshorter-test --tail
+sam logs -n RedirectToUrlLambdaFunction --stack-name urlshorter-test --tail
 ```
 
 **NOTE:** This uses the logical name of the function within the stack. This is the correct name to use when searching logs inside an AWS Lambda function within a CloudFormation stack, even if the deployed function name varies due to CloudFormation's unique resource name generation.
@@ -134,7 +134,7 @@ aws s3 sync web/ s3://$WEB_BUCKET/
 To delete the sample application that you created, use the AWS CLI. Assuming you used your project name for the stack name, you can run the following:
 
 ```bash
-aws cloudformation delete-stack --stack-name urlshoter-test
+aws cloudformation delete-stack --stack-name urlshorter-test
 ```
 
 ## Resources

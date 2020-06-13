@@ -1,6 +1,6 @@
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const docClient = new dynamodb.DocumentClient();
-const shotIdGen = require('short-id');
+const shortIdGen = require('short-id');
 const success = require('../libs/success');
 const bad = require('../libs/bad');
 const reject = require('../libs/reject');
@@ -9,7 +9,7 @@ const reject = require('../libs/reject');
 /**
  * get original url and save to DynamoDB .
  */
-exports.toShotUrlLambdaHandler = async (event) => {
+exports.toShortUrlLambdaHandler = async (event) => {
     if (event.httpMethod !== 'POST') {
         return reject();
     }
@@ -19,11 +19,11 @@ exports.toShotUrlLambdaHandler = async (event) => {
         
         validUrl(originUrl);
 
-        const shotId = await genValidShotId();
+        const shortId = await genValidShortId();
         
-        await saveUrl(shotId, originUrl);
+        await saveUrl(shortId, originUrl);
 
-        return success({ shotId: shotId, originUrl: originUrl });
+        return success({ shortId: shortId, originUrl: originUrl });
     }
     catch (error) {
         return bad(error);
@@ -42,19 +42,19 @@ var validUrl = function(url) {
 }
 
 /**
- * generate unique shot id
+ * generate unique short id
  */
-var genValidShotId = async function () {
-    const shotId = shotIdGen.generate();
+var genValidShortId = async function () {
+    const shortId = shortIdGen.generate();
     const result = docClient.get({
         TableName: process.env.Url_Table,
-        Key: { shotId: shotId },
+        Key: { shortId: shortId },
     }).promise();
     if (result.Item) {
-        console.info(shotId + ' exist ');
-        await genValidShotId();
+        console.info(shortId + ' exist ');
+        await genValidShortId();
     } else {
-        return shotId;
+        return shortId;
     }
 }
 
@@ -71,13 +71,13 @@ var getUrl = function (event) {
 }
 
 /**
- * save shotId and originUrl to DDB
- * @param {*} shotId 
+ * save shortId and originUrl to DDB
+ * @param {*} shortId 
  * @param {*} originUrl 
  */
-var saveUrl = function (shotId, originUrl) {
+var saveUrl = function (shortId, originUrl) {
     return docClient.put({
         TableName: process.env.Url_Table,
-        Item: { shotId: shotId, originUrl: originUrl }
+        Item: { shortId: shortId, originUrl: originUrl }
     }).promise();
 }

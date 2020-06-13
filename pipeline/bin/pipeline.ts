@@ -4,4 +4,4 @@ import * as cdk from '@aws-cdk/core';
 import { PipelineStack } from '../lib/pipeline-stack';
 
 const app = new cdk.App();
-new PipelineStack(app, 'shot-url-pipeline-stack');
+new PipelineStack(app, 'urlshorter-pipeline-stack');

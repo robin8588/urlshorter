@@ -5,7 +5,7 @@
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  Url Shoter
+  Url Shorter
 
 # Transform section specifies one or more macros that AWS CloudFormation uses to process your template
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
@@ -43,23 +43,23 @@ Resources:
       Handler: src/handlers/index.indexLambdaHandler
       Description: index
       Events:
-        ToShotUrl:
+        IndexApi:
           Type: Api
           Properties:
             Path: /
             Method: GET
 
-  ToShotUrlLambdaFunction:
+  ToShortUrlLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/to-shot-url.toShotUrlLambdaHandler
-      Description: transferm url to shot url
+      Handler: src/handlers/to-short-url.toShortUrlLambdaHandler
+      Description: transferm url to short url
       Policies:
         # Give Create/Read/Update/Delete Permissions to the UrlTable
         - DynamoDBCrudPolicy:
             TableName: !Ref UrlTable
       Events:
-        ToShotUrl:
+        ToShortUrlApi:
           Type: Api
           Properties:
             Path: /
@@ -69,7 +69,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/redirect-to-url.redirectToUrlLambdaHandler
-      Description: redirect to url by shot url
+      Description: redirect to url by short url
       Policies:
         # Give Create/Read/Update/Delete Permissions to the UrlTable
         - DynamoDBCrudPolicy:
@@ -78,7 +78,7 @@ Resources:
         RedirectToUrlApi:
           Type: Api
           Properties:
-            Path: /{shotId}
+            Path: /{shortId}
             Method: GET
 
 # DynamoDB table to store item
@@ -86,7 +86,7 @@ Resources:
     Type: AWS::Serverless::SimpleTable
     Properties:
       PrimaryKey:
-        Name: shotId
+        Name: shortId
         Type: String
 
   DeployErrorsAlarm:

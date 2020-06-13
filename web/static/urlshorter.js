@@ -5,7 +5,7 @@ function cleanInput() {
 }
 
 function submitToAPI() {
-    var shoterUrl = "https://59sy703n1f.execute-api.ap-northeast-2.amazonaws.com/Prod/";
+    var shorterUrl = "https://59sy703n1f.execute-api.ap-northeast-2.amazonaws.com/Prod/";
 
     var urlTester = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
     if (!urlTester.test($("#url").val())) {
@@ -21,7 +21,7 @@ function submitToAPI() {
 
     $.ajax({
         type: "POST",
-        url: shoterUrl,
+        url: shorterUrl,
         dataType: "json",
         crossDomain: "true",
         contentType: "application/json; charset=utf-8",
@@ -30,7 +30,7 @@ function submitToAPI() {
             message('loading');
         },
         success: function (data) {
-            message('<b>Shoturl: </b><span>' + shoterUrl + data.shotId + '</span>')
+            message('<b>ShortUrl: </b><span>' + shorterUrl + data.shortId + '</span>')
         },
         error: function () {
             message('oops , please try again');

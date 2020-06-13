@@ -13,7 +13,7 @@ export class PipelineStack extends cdk.Stack {
     super(scope, id, props);
 
     // The code that defines your stack goes here
-    const artifactsBucket = new s3.Bucket(this, "shoturl-pipeline-artifact");
+    const artifactsBucket = new s3.Bucket(this, "urlshorter-pipeline-artifact");
     // Import existing CodeCommit sam-app repository
     const codeRepo = codecommit.Repository.fromRepositoryName(
       this,
@@ -78,17 +78,17 @@ export class PipelineStack extends cdk.Stack {
         new codepipeline_actions.CloudFormationCreateReplaceChangeSetAction({
           actionName: 'CreateReplaceChangeSet',
           templatePath: buildOutput.atPath("packaged.yaml"),
-          stackName: 'shot-url-pipeline-stack',
+          stackName: 'urlshorter-pipeline-stack',
           adminPermissions: false,
           deploymentRole: iam.Role.fromRoleArn(this, 'PipelineDeployRole', 'arn:aws:iam::357518989200:role/PipelineDeployRole'),
           capabilities: [CloudFormationCapabilities.ANONYMOUS_IAM,CloudFormationCapabilities.AUTO_EXPAND],
-          changeSetName: 'shot-url-deploy-changeset',
+          changeSetName: 'urlshorter-deploy-changeset',
           runOrder: 1
         }),
         new codepipeline_actions.CloudFormationExecuteChangeSetAction({
           actionName: 'ExecuteChangeSet',
-          stackName: 'shot-url-pipeline-stack',
-          changeSetName: 'shot-url-deploy-changeset',
+          stackName: 'urlshorter-pipeline-stack',
+          changeSetName: 'urlshorter-deploy-changeset',
           runOrder: 2
         }),
       ],

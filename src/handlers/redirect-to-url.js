@@ -5,7 +5,7 @@ const bad = require('../libs/bad');
 const reject = require('../libs/reject');
 
 /**
- * get shotId from path get original url from DynamoDB and redirect to original url
+ * get shortId from path get original url from DynamoDB and redirect to original url
  */
 exports.redirectToUrlLambdaHandler = async (event) => {
     if (event.httpMethod !== 'GET') {
@@ -13,9 +13,9 @@ exports.redirectToUrlLambdaHandler = async (event) => {
     }
 
     try {
-        const shotId = getShotIdFromPath(event);
+        const shortId = getShortIdFromPath(event);
   
-        const result = await getUrlBy(shotId);
+        const result = await getUrlBy(shortId);
         
         return redirect(result.Item.originUrl);
     }
@@ -25,21 +25,21 @@ exports.redirectToUrlLambdaHandler = async (event) => {
 }   
 
 /**
- * get shotId from pathParameters.
+ * get shortId from pathParameters.
  * @param {*} event 
  */
-var getShotIdFromPath = function (event) {
-    return event.pathParameters.shotId;
+var getShortIdFromPath = function (event) {
+    return event.pathParameters.shortId;
 }  
 
 /**
  * get original url from DynamoDB.
- * @param {*} shotId 
+ * @param {*} shortId 
  */
-var getUrlBy = async function (shotId) {
+var getUrlBy = async function (shortId) {
     const result = await docClient.get({
         TableName: process.env.Url_Table,
-        Key: { shotId: shotId },
+        Key: { shortId: shortId },
     }).promise();
     if (!result.Item) {
         throw new Error('redirect url not found');
