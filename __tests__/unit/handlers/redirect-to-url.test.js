@@ -1,6 +1,6 @@
 const lambda = require('../../../src/handlers/redirect-to-url.js'); 
 const dynamodb = require('aws-sdk/clients/dynamodb'); 
-const shotIdGen = require('shortid');
+const shotIdGen = require('short-id');
 
 // All tests for redirectToUrlLambdaHandler() 
 describe('Test redirectToUrlLambdaHandler', () => { 

@@ -5,9 +5,12 @@ This project contains source code and supporting files for a serverless applicat
 - `src` - Code for the application's Lambda function.
 - `events` - Invocation events that you can use to invoke the function.
 - `__tests__` - Unit tests for the application code. 
+- `web` - FrontEnd pages to demonstrate how this service works.
+- `web/swagger` - SwaggerUI page to demonstrate how this service api work.
 - `template.yml` - A template that defines the application's AWS resources.
-- `web` - FrontEnd pages to demonstrate how this service works
-- `web/swagger` - SwaggerUI page to demonstrate how this service api work
+- `buildspec.yml` - build specification files for AWS CodeBuild.
+- `samconfig.toml` - SAM CLI config file.
+- `web/swagger/swagger.yaml` - OpenAPI Specification v2 file.
 
 Resources for this project are defined in the `template.yml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
 
@@ -61,7 +64,7 @@ Test a single function by invoking it directly with a test event. An event is a 
 Run functions locally and invoke them with the `sam local invoke` command.
 
 ```bash
-my-application$ sam local invoke IndexLambdaFunction --no-event
+sam local invoke IndexLambdaFunction --no-event
 ```
 
 ## Add a resource to your application

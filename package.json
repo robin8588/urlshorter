@@ -5,6 +5,7 @@
     "private": true,
     "dependencies": {
         "aws-sdk": "^2.690.0",
+        "short-id": "0.1.0-1",
         "shortid": "^2.2.15"
     },
     "devDependencies": {
@@ -16,13 +17,13 @@
     "jest": {
         "verbose": true,
         "collectCoverage": true,
-        "coveragePathIgnorePatterns":[
-            "<rootDir>/.aws-sam/", 
+        "coveragePathIgnorePatterns": [
+            "<rootDir>/.aws-sam/",
             "<rootDir>/node_modules/",
             "<rootDir>/pipeline/"
         ],
-        "testPathIgnorePatterns":[
-            "<rootDir>/.aws-sam/", 
+        "testPathIgnorePatterns": [
+            "<rootDir>/.aws-sam/",
             "<rootDir>/node_modules/",
             "<rootDir>/pipeline/"
         ]

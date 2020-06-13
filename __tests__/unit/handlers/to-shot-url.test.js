@@ -1,6 +1,5 @@
 const lambda = require('../../../src/handlers/to-shot-url.js');
-const dynamodb = require('aws-sdk/clients/dynamodb'); 
-const shotIdGen = require('shortid');
+const dynamodb = require('aws-sdk/clients/dynamodb');
  
 // All tests for toShotUrlLambdaHandler() 
 describe('Test toShotUrlLambdaHandler', function () { 

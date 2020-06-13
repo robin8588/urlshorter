@@ -1,6 +1,6 @@
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const docClient = new dynamodb.DocumentClient();
-const shotIdGen = require('shortid');
+const shotIdGen = require('short-id');
 const success = require('../libs/success');
 const bad = require('../libs/bad');
 const reject = require('../libs/reject');
