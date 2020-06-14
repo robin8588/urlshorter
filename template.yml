@@ -108,6 +108,52 @@ Resources:
         - Name: ExecutedVersion
           Value: !GetAtt IndexLambdaFunction.Version.Version
 
+  ToShortUrlErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: ToShortUrl Lambda function running errors
+      AlarmActions: 
+        - "arn:aws:sns:ap-northeast-2:357518989200:deploy-notifications-"
+      OKActions: 
+        - "arn:aws:sns:ap-northeast-2:357518989200:deploy-notifications-"
+      ComparisonOperator: GreaterThanThreshold
+      EvaluationPeriods: 2
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Period: 60
+      Statistic: Sum
+      Threshold: 1
+      Dimensions:
+        - Name: Resource
+          Value: !Sub "${ToShortUrlLambdaFunction}:live"
+        - Name: FunctionName
+          Value: !Ref ToShortUrlLambdaFunction
+        - Name: ExecutedVersion
+          Value: !GetAtt ToShortUrlLambdaFunction.Version.Version
+
+  RedirectToUrlErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: RedirectToUrl Lambda function running errors
+      AlarmActions: 
+        - "arn:aws:sns:ap-northeast-2:357518989200:deploy-notifications-"
+      OKActions: 
+        - "arn:aws:sns:ap-northeast-2:357518989200:deploy-notifications-"
+      ComparisonOperator: GreaterThanThreshold
+      EvaluationPeriods: 2
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Period: 60
+      Statistic: Sum
+      Threshold: 1
+      Dimensions:
+        - Name: Resource
+          Value: !Sub "${RedirectToUrlLambdaFunction}:live"
+        - Name: FunctionName
+          Value: !Ref RedirectToUrlLambdaFunction
+        - Name: ExecutedVersion
+          Value: !GetAtt RedirectToUrlLambdaFunction.Version.Version
+
 Outputs:
   WebEndpoint:
     Description: "API Gateway endpoint URL for Prod stage"

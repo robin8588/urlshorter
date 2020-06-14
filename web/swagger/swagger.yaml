@@ -3,7 +3,7 @@ swagger: "2.0"
 info:
   version: "1.0"
   title: "UrlShorter"
-host: "59sy703n1f.execute-api.ap-northeast-2.amazonaws.com"
+host: "6bl2tym54c.execute-api.ap-northeast-2.amazonaws.com"
 basePath: "/Prod"
 schemes:
 - "https"

@@ -7,6 +7,7 @@ import codebuild = require('@aws-cdk/aws-codebuild');
 import * as iam from '@aws-cdk/aws-iam';
 import { CodeCommitTrigger } from '@aws-cdk/aws-codepipeline-actions';
 import { CloudFormationCapabilities } from '@aws-cdk/aws-cloudformation';
+import { Topic } from '@aws-cdk/aws-sns';
 
 export class PipelineStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -17,14 +18,14 @@ export class PipelineStack extends cdk.Stack {
     // Import existing CodeCommit sam-app repository
     const codeRepo = codecommit.Repository.fromRepositoryName(
       this,
-      'urlshoterRepository', // Logical name within CloudFormation
-      'urlshoter' // Repository name
+      'urlshorterRepository', // Logical name within CloudFormation
+      'urlshorter' // Repository name
     );
 
     // Pipeline creation starts
     const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
       artifactBucket: artifactsBucket,
-      role: iam.Role.fromRoleArn(this,'AWSCodePipelineServiceRole','arn:aws:iam::357518989200:role/service-role/AWSCodePipelineServiceRole')
+      role: iam.Role.fromRoleArn(this,'AWSCodePipelineServiceRole','arn:aws:iam::357518989200:role/service-role/urlshorter-live-pipeline-role')
     });
 
     // Declare source code as an artifact
@@ -55,7 +56,7 @@ export class PipelineStack extends cdk.Stack {
           value: artifactsBucket.bucketName
         }
       },
-      role: iam.Role.fromRoleArn(this,'CodeBuildServiceRole','arn:aws:iam::357518989200:role/service-role/CodeBuildServiceRole')
+      role: iam.Role.fromRoleArn(this,'CodeBuildServiceRole','arn:aws:iam::357518989200:role/service-role/urlshorter-live-codebuild-role')
     });
 
     // Add the build stage to our pipeline
@@ -80,16 +81,21 @@ export class PipelineStack extends cdk.Stack {
           templatePath: buildOutput.atPath("packaged.yaml"),
           stackName: 'urlshorter-pipeline-stack',
           adminPermissions: false,
-          deploymentRole: iam.Role.fromRoleArn(this, 'PipelineDeployRole', 'arn:aws:iam::357518989200:role/PipelineDeployRole'),
+          deploymentRole: iam.Role.fromRoleArn(this, 'PipelineDeployRole', 'arn:aws:iam::357518989200:role/urlshorter-live-deploy-role'),
           capabilities: [CloudFormationCapabilities.ANONYMOUS_IAM,CloudFormationCapabilities.AUTO_EXPAND],
           changeSetName: 'urlshorter-deploy-changeset',
           runOrder: 1
+        }),
+        new codepipeline_actions.ManualApprovalAction({
+          actionName: 'Approval',
+          notificationTopic: Topic.fromTopicArn(this,'approvalTopic','arn:aws:sns:ap-northeast-2:357518989200:deploy-notifications-'),
+          runOrder: 2
         }),
         new codepipeline_actions.CloudFormationExecuteChangeSetAction({
           actionName: 'ExecuteChangeSet',
           stackName: 'urlshorter-pipeline-stack',
           changeSetName: 'urlshorter-deploy-changeset',
-          runOrder: 2
+          runOrder: 3
         }),
       ],
     });

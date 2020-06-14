@@ -5,7 +5,7 @@ function cleanInput() {
 }
 
 function submitToAPI() {
-    var shorterUrl = "https://59sy703n1f.execute-api.ap-northeast-2.amazonaws.com/Prod/";
+    var shorterUrl = "https://6bl2tym54c.execute-api.ap-northeast-2.amazonaws.com/Prod/";
 
     var urlTester = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
     if (!urlTester.test($("#url").val())) {
